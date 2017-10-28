@@ -27,6 +27,28 @@ function [f,g] = softmax_regression(theta, X,y)
   %        Before returning g, make sure you form it back into a vector with g=g(:);
   %
 %%% YOUR CODE HERE %%%
+  T = exp(theta' * X);
+  dem = sum(T, 1);
+  for i = 1 : m
+    P(:, i) = T(:, i) / dem(i);
+  end
+
+  for i = 1 : m
+    for k = 1 : num_classes - 1
+        if y(i) == k
+            f = f - log(P(k, i));
+        end
+    end
+
+    for k = 1 : num_classes-1
+      if y(i) == k
+        g(:, k) = g(:, k) - X(:, i) * (1 - P(k, i));
+      else
+        g(:, k) = g(:, k) - X(:, i) * (0 - P(k, i));
+      end
+    end
+  end
+
   
   g=g(:); % make gradient a vector for minFunc
 
